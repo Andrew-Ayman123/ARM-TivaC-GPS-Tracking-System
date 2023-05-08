@@ -27,6 +27,7 @@
 #include "./distance_checker.h" // custom function to check distance and turn on appropriate LED
 
 int main(void) {
+  bool print_to_pc = false;
   double distanceTotal = 0; // variable to hold total distance traveled
   char str_main[100]; // string buffer to hold GPS data string
   double lat_long_pos_now[4]; // array to hold current latitude and longitude position
@@ -36,9 +37,16 @@ int main(void) {
 
   setClock16MHz(); // initialize clock frequency
   PortF_Init(); // initialize GPIO port for LEDs
-  PortA_Init_UART0(); // initialize UART0 for communication with display device
   PortE_Init_UART5(); // initialize UART5 for communication with GPS device
 
+  if (print_to_pc) {
+    PortA_Init_UART0(); // initialize UART0 for communication with PC
+  }
+
+  else {
+    PortE_Init_UART7(); // initialize UART7 for communication with Bluethooth
+  }
+ 
   while (1) { // enter infinite loop
     if (receive_UART5_gps(str_main)) { // if GPS data is received
 
@@ -48,11 +56,14 @@ int main(void) {
       distanceTotal = distance_total_calculator(lat_long_pos_prev, lat_long_pos_now); // calculate total distance traveled
       distanceCheck(displacement); // check distance and turn on appropriate LED
 
-      sprintf(str_main, "Remaining Displacment is: %f\r\n", displacement); // format remaining displacement as string
-      UART0_SendString(str_main); // send remaining displacement to display device using UART0
-
-      sprintf(str_main, "Total distance: %f\r\n", distanceTotal); // format total distance as string
-      UART0_SendString(str_main); // send total distance to display device using UART0
+      // Output to computer through usb or bluethooth module
+      sprintf(str_main, "Remaining Displacement is: %.2f, Total Distance: %.2f\r\n", displacement, distanceTotal); // format remaining displacement as string
+      if (print_to_pc) {
+        UART0_SendString(str_main); // send remaining displacement to display device using UART0   
+      }
+      else {
+        UART7_SendString(str_main); // send total distance to display device using UART7
+      }
       str_main[0] = '\0'; // clear GPS data string buffer
     }
   }
