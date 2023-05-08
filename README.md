@@ -6,7 +6,7 @@ This is a GPS tracking device project that receives GPS data from UART5 and calc
 
 The project includes several header files for standard libraries, as well as several source files for custom functions:
 
-- `displacement_calculator.c`: Contains a function to calculate the displacement between two GPS latitude and longitude positions using the Haversine formula.
+- `displacement_calculator.h`: Contains a function to calculate the displacement between two GPS latitude and longitude positions using the Haversine formula.
 - `distance_total.h`: Contains functions to calculate the total distance traveled by the device using GPS data.
 - `initialization.h`: Contains functions to initialize clock frequency, UART ports, and GPIO ports.
 - `string_handler.h`: Contains a function to extract the latitude and longitude position from a GPS data string.
