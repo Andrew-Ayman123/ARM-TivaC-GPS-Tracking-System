@@ -24,7 +24,7 @@ double distance_total_calculator(double* prev_lat_long, double* now_lat_long) {
   static double total_distance = 0;
 
   // If there is no previous latitude and longitude position, set it to the current position and return 0
-  if (prev_lat_long == NULL) {
+  if (prev_lat_long[0] == 0) {
     setLatLongPosPrev(prev_lat_long, now_lat_long);
     return 0;
   }
