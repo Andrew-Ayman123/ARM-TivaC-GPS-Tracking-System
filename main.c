@@ -12,10 +12,10 @@
  * The program then sends the remaining displacement and total distance traveled to UART0 using the UART0_SendString() function.
  */
 
-#include <stdbool.h>
-#include <stdint.h>
 #include <string.h>  
 #include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include "./displacement_calculator.h" // custom function to calculate displacement
@@ -26,14 +26,16 @@
 #include "./uart_send_receive.h" // custom functions to send and receive data using UART0
 #include "./distance_checker.h" // custom function to check distance and turn on appropriate LED
 
+
 int main(void) {
   bool print_to_pc = false;
   double distanceTotal = 0; // variable to hold total distance traveled
   char str_main[100]; // string buffer to hold GPS data string
-  double lat_long_pos_now[4]; // array to hold current latitude and longitude position
-  double lat_long_pos_prev[4]; // array to hold previous latitude and longitude position
-  double lat_long_target[4] = { 30.0648486,0,31.2772470,0 }; // array to hold target latitude and longitude position
   double displacement = 0; // variable to hold displacement between current position and target position
+
+  double lat_long_pos_now[4] = { 0,0,0,0 }; // array to hold current latitude and longitude position
+  double lat_long_pos_prev[4] = { 0,0,0,0 }; // array to hold previous latitude and longitude position
+  double lat_long_target[4] = { 30.0635057,0,31.2797673,0 }; // array to hold target latitude and longitude position
 
   setClock16MHz(); // initialize clock frequency
   PortF_Init(); // initialize GPIO port for LEDs
@@ -42,23 +44,24 @@ int main(void) {
   if (print_to_pc) {
     PortA_Init_UART0(); // initialize UART0 for communication with PC
   }
-
   else {
     PortE_Init_UART7(); // initialize UART7 for communication with Bluethooth
   }
- 
+
   while (1) { // enter infinite loop
     if (receive_UART5_gps(str_main)) { // if GPS data is received
-
       handleGpsInput(str_main, lat_long_pos_now); // extract latitude and longitude position from GPS data string
 
       displacement = calculateDisplacement(lat_long_pos_now, lat_long_target); // calculate displacement between current position and target position
-      distanceTotal = distance_total_calculator(lat_long_pos_prev, lat_long_pos_now); // calculate total distance traveled
+
       distanceCheck(displacement); // check distance and turn on appropriate LED
+      distanceTotal = distance_total_calculator(lat_long_pos_prev, lat_long_pos_now); // calculate total distance traveled
+
 
       // Output to computer through usb or bluethooth module
-      sprintf(str_main, "Remaining Displacement is: %.2f, Total Distance: %.2f\r\n", displacement, distanceTotal); // format remaining displacement as string
+      sprintf(str_main, "Remaining Displacement is: %.2f Total Distance: %.2f", displacement, distanceTotal); // format remaining displacement as string
       if (print_to_pc) {
+        strcat(str_main, "\r\n");
         UART0_SendString(str_main); // send remaining displacement to display device using UART0   
       }
       else {
