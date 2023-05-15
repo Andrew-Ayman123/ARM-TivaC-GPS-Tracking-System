@@ -19,7 +19,7 @@
 #include "inc/tm4c123gh6pm.h"
 #include "driverlib/sysctl.h"
 
- // Function to convert a double to a decimal with two decimal places
+ // Function to convert from degrees and minutes to decimal format
 double to_decimal(double x) {
     int dint = (int)x;
     x -= dint;
