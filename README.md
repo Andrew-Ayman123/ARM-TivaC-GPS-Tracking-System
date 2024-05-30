@@ -10,8 +10,7 @@
   
   <h3>  Tiva C Series TM4C123G Microcontroller based GPS tracking device to send you to the right destincation.</h3>
   
-  <img src="./assets/GPS Tracking System.png" alt="logo" />
-
+  <img src="https://github.com/Andrew-Ayman123/ARM-TivaC-GPS-Tracking-System/assets/88400418/059e4a56-34ed-42fd-bc3e-45e66362371c" alt="logo" />
 
 </div>
 
